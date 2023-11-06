@@ -3,8 +3,10 @@ Name: main.py
 Description: Startup program for the application.
 """
 from fastapi import FastAPI
+from database.connection import conn
 from routes.users import user_router
 from routes.events import event_router
+from fastapi.responses import RedirectResponse
 import uvicorn
 
 app = FastAPI()
@@ -12,8 +14,14 @@ app = FastAPI()
 # Register routes
 
 app.include_router(user_router, prefix="/user")
-
 app.include_router(event_router, prefix="/event")
+
+@app.on_event("startup")
+def on_startup():
+    conn()
+
+async def home():
+    return RedirectResponse(url="/event/")
 
 if __name__ == "__main__":
 
