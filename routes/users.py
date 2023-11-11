@@ -25,13 +25,13 @@ async def sign_in_user(new_user:UserSignIn,session=Depends(get_session)) -> dict
 @user_router.post("/signin")
 async def sign_user_in(user_signin: UserSignIn,session=Depends(get_session)) -> dict:
     user = session.get(UserSignIn, user_signin.email)
-    if user.email !=user_signin.email:
+    if user and user.email !=user_signin.email:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User does not exist"
         )
 
-    if user.password != user_signin.password:
+    if user and user.password != user_signin.password:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Wrong credential passed"

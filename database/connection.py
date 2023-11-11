@@ -1,12 +1,13 @@
 from sqlmodel import SQLModel, Session, create_engine
+from settings.app_settings import get_settings
 
-database_file = "planner.db"
-database_connection_string = f"sqlite:///{database_file}"
+settings = get_settings()
+database_connection_string = f"sqlite:///{settings.SQL_DB_FILE}"
 
 connect_args = {"check_same_thread": False}
 engine_url = create_engine(database_connection_string, echo=True, connect_args=connect_args)
 
-def conn():
+def create_all():
     SQLModel.metadata.create_all(engine_url)
 
 
