@@ -13,3 +13,6 @@
 - Add an entry DATABASE_URL="mongodb://\<username\>:\<password\>@127.0.0.1:27017/planner?authSource=admin"
 - Run the application using the below command
 > uvicorn main:app
+
+Below is the snapshot of running the above application image.  
+![alt text](./img/screenshot.jpeg "planner")  
