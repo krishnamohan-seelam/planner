@@ -3,20 +3,19 @@ Name: events.py
 Description:This file will contain the model definition for events operations.
 """
 
-from pydantic import BaseModel
-from sqlmodel import JSON, SQLModel, Field, Column
+from pydantic import BaseModel,Field
+from beanie import Document
 from typing import Optional, List
 
-
-class BaseEvent(SQLModel):
+from uuid import UUID, uuid4
+class BaseEvent(BaseModel):
     title: str
     image: str
     description: str
-    tags: List[str] = Field(sa_column=Column(JSON))
-    location: str
-
+    location:str
     class Config:
         arbitrary_types_allowed = True
+        
         json_schema_extra = {
             "example": {
                 "title": "Music Concert",
@@ -28,11 +27,16 @@ class BaseEvent(SQLModel):
         }
 
 
-class Event(BaseEvent,table=True):
-    id: str = Field(default=None, primary_key=True)
-
+class Event(Document):
+    id: UUID = Field(alias="_id",default_factory=uuid4)
+    title: str
+    image: str
+    description: str
+    location:str
     class Config:
         arbitrary_types_allowed = True
+        populate_by_name=True
+        json_encoders={UUID: str}
         json_schema_extra = {
             "example": {
                 "id": "1",
@@ -43,9 +47,10 @@ class Event(BaseEvent,table=True):
                 "location": "Google Meet",
             }
         }
+    class Settings:
+        name = "events"
 
-
-class EventUpdate(SQLModel):
+class EventUpdate(BaseModel):
     title: Optional[str]
     image: Optional[str]
     description: Optional[str]

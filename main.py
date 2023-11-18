@@ -3,22 +3,30 @@ Name: main.py
 Description: Startup program for the application.
 """
 from fastapi import FastAPI
-from database.connection import conn
 from routes.users import user_router
 from routes.events import event_router
 from fastapi.responses import RedirectResponse
+from contextlib import asynccontextmanager
+from settings.app_settings import get_settings
 import uvicorn
 
-app = FastAPI()
+settings = get_settings()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Create tables 
+    await settings.initialize_database() 
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
 
 # Register routes
 
 app.include_router(user_router, prefix="/user")
 app.include_router(event_router, prefix="/event")
 
-@app.on_event("startup")
-def on_startup():
-    conn()
+
 
 async def home():
     return RedirectResponse(url="/event/")
