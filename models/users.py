@@ -2,30 +2,30 @@
 Name: models.py
 Description:This file will contain the model definition for user operations.
 """
-from pydantic import BaseModel, EmailStr
 from typing import Optional, List
+from beanie import Document, Link
+from pydantic import BaseModel, EmailStr 
 from models.events import Event
+from beanie import Document
 
 
-class User(BaseModel):
-    email: EmailStr
+class User(Document):
+    email: EmailStr 
     password: str
-    events: Optional[List[Event]]
+    events: Optional[List[Link[Event]]]
+
+    class Settings:
+        name = "users"
 
     class Config:
-        json_schema_extra = {
-            "email": "fastapi@example.com",
-            "username": "strong!!!",
-            "events": [],
+        schema_extra = {
+            "example": {
+                "email": "fastapi@packt.com",
+                "password": "strong!!!",
+                "events": [],
+            }
         }
 
 class UserSignIn(BaseModel):
     email: EmailStr
     password: str
- 
-
-    class Config:
-        json_schema_extra = {
-            "email": "fastapi@example.com",
-            "username": "strong!!!",
-        }
