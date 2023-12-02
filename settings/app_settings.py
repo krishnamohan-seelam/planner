@@ -18,7 +18,7 @@ class AppBaseSettings(BaseSettings):
     APP_CONFIG: AppConfig = AppConfig()
     DATABASE_URL: Optional[str] = Field(None,env="DATABASE_URL")
     ENV_STATE: Optional[str] = Field(None,env="ENV_STATE")
-
+    SECRET_KEY: Optional[str] = None
     async def initialize_database(self):
         client = AsyncIOMotorClient(self.DATABASE_URL)
         print("Initializing database:",self.DATABASE_URL)

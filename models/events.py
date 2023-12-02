@@ -29,6 +29,7 @@ class BaseEvent(BaseModel):
 
 class Event(Document):
     id: UUID = Field(alias="_id",default_factory=uuid4)
+    creator:Optional[str]
     title: str
     image: str
     description: str
